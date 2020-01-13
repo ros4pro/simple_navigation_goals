@@ -40,7 +40,7 @@ class SimpleNavigationGoals:
         rospy.loginfo("Starting simple_navigation_goals...")
 
         # Created the client
-        self.move_base = actionlib.SimpleActionClient("move_base", MoveBaseAction)
+        self.move_base = actionlib.SimpleActionClient("/tb3/move_base", MoveBaseAction)
         rospy.loginfo("Waiting for the action server to come up...")
         success = self.move_base.wait_for_server(rospy.Duration(5))
         if not (success):
@@ -48,7 +48,7 @@ class SimpleNavigationGoals:
                 "The move_base action server did not respond in time, exiting."
             )
             raise InitException("Failed SimpleNavigationGoals init")
-        rospy.Subscriber("move_base/feedback", MoveBaseActionFeedback, self._feedback)
+        rospy.Subscriber("/tb3/move_base/feedback", MoveBaseActionFeedback, self._feedback)
 
         # Defines the goal position
         self.goal = MoveBaseGoal()
@@ -61,7 +61,7 @@ class SimpleNavigationGoals:
 
         # Length of the last path computed by the global planner
         self.remaining_distance = -1
-        rospy.Subscriber("/move_base/GlobalPlanner/plan", Path, self._compute_remaining_distance)
+        rospy.Subscriber("/tb3/move_base/GlobalPlanner/plan", Path, self._compute_remaining_distance)
         # No need to fetch the result of the move_base action_lib, it's empty.
 
         if (hmi_wrapper == None) :
